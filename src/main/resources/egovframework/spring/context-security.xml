@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:sec="http://www.springframework.org/schema/security"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+	<!-- 암호화 객체 -->
+	<bean id="passwordEncoding"
+		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+
+	<bean id="loginSuccessHandler"
+		class="egovframework.example.security.LoginSuccessHandlerr" />
+	<bean id="customuserDetailService"
+		class="egovframework.example.security.CustomUserDetailService" />
+	<bean id="LoginFailHandler"
+		class="egovframework.example.security.LoginFailHandler" />
+	<!-- 요청에 따른 권한 설정 -->
+	<sec:http>
+		<sec:intercept-url pattern="/user/**"
+			access="hasRole('ROLE_USER')" />
+		<sec:intercept-url pattern="/**" access="permitAll" />
+		<sec:form-login login-page="/loginpage.do" login-processing-url="/login.do"
+				username-parameter="username"
+			password-parameter="password"
+			authentication-success-handler-ref="loginSuccessHandler"
+			authentication-failure-handler-ref="LoginFailHandler" 
+		/>
+		<sec:logout logout-url="/logout.do" logout-success-url="/"
+			invalidate-session="true" delete-cookies="true" />
+
+		<sec:remember-me data-source-ref="dataSource"
+			remember-me-parameter="remember-me" token-validity-seconds="604800" />
+	</sec:http>
+
+
+
+	<!-- 인증매니져 설정 -->
+	<sec:authentication-manager>
+		<sec:authentication-provider
+			user-service-ref="customuserDetailService">
+			<!-- <sec:jdbc-user-service data-source-ref="dataSource" /> -->
+
+			<sec:password-encoder ref="passwordEncoding" />
+		</sec:authentication-provider>
+	</sec:authentication-manager>
+</beans>

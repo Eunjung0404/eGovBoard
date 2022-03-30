@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+ 
+<tiles-definitions>
+	<!-- main layout -->
+	<definition name="layout-tiles" template="/tiles/layout.jsp">
+		<put-attribute name="header" value="/tiles/header.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/tiles/footer.jsp" />
+	</definition>
+	
+	<definition name="*.tiles" extends="layout-tiles">
+		<put-attribute name="body" value="/{1}.jsp"/>
+		<put-attribute name="title" value="게시판" />
+	</definition>
+	
+	<definition name="*/*.tiles" extends="layout-tiles">
+		<put-attribute name="body" value="/{1}/{2}.jsp"/>
+		<put-attribute name="title" value="게시판" />
+	</definition>
+</tiles-definitions>

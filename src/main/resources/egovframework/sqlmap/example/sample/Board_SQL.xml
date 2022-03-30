@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Board">
+
+	<typeAlias alias="egovMap"
+		type="egovframework.rte.psl.dataaccess.util.EgovMap" />
+	<typeAlias alias="boardVo"
+		type="egovframework.example.sample.service.BoardVO" />
+
+
+
+
+	<!-- board insert -->
+	<insert id="boardDAO.InsertBoard" parameterClass="boardVo">
+		insert into
+		board( board_code
+		,cate_code
+		,user_id
+		,user_nicname
+		,title
+		,content
+		,
+		regdate ) values
+		(seq_board.nextval,#cate_code#,#user_id#,#user_nicname#,#title#,CHAR_TO_CLOB(#content#),sysdate)
+	</insert>
+	<!-- 카테고리 정보 불러오기 -->
+	<select id="boardDAO.SelectCategory"
+		resultClass="egovframework.example.sample.vo.CategoryVo">
+		SELECT * FROM board_category
+	</select>
+	<!-- 게시글 리스트 가져오기 -->
+	<select id="boardDAO.SelectAllBoard" parameterClass="map"
+		resultClass="boardVo">
+		SELECT * from(SELECT board.*,ROWNUM rown from(SELECT * FROM board
+		<isNotEmpty property="cate_code">
+			where cate_code=#cate_code#
+		</isNotEmpty>
+		ORDER BY TO_NUMBER(board_code) DESC)board)<![CDATA[where rown>=#startRow# and rown<=#endRow#]]>
+	</select>
+	<!-- 게시글 총 리스트 가져오기 -->
+	<select id="boardDAO.GetAllBoardCount" resultClass="int" parameterClass="map">
+		select
+		NVL(count(*),0) FROM board
+		<isNotEmpty property="cate_code">
+			where cate_code=#cate_code#
+		</isNotEmpty>
+	</select>
+	<!-- 게시글 상세 가져오기 -->
+
+	<select id="boardDAO.GetBoardDetail" resultClass="boardVo"
+		parameterClass="String">
+		select * from board where board_code=#board_code#
+	</select>
+	<!-- 가장 윗 게시글 번호 가져오기 -->
+	<select id="boardDAO.GetTopBoardCode" resultClass="String">
+		SELECT
+		MAX(TO_NUMBER(board_code)) FROM board
+	</select>
+	<!-- 이미지 저장 -->
+	<insert id="boardDAO.InsertBoardImg"
+		parameterClass="egovframework.example.sample.vo.BoardImgVo">
+		insert into board_img(boardimg_code,
+		board_code, imgname
+		)
+		values
+		(seq_boardimg.nextval,#board_code#,#imgname#)
+	</insert>
+	<!-- 카테고리 가져오기 -->
+	<select id="boardDAO.getCategory" parameterClass="String"
+		resultClass="String">
+		select category from board_category where cate_code = #cate_code#
+	</select>
+	<!-- 이미지 정보 가져오기 -->
+	<select id="boardDAO.getImgNames" parameterClass="String"
+		resultClass="String">
+		select imgname from board_img where board_code=#board_code#
+	</select>
+	<!-- 글 삭제 -->
+	<delete id="boardDAO.deleteBoard" parameterClass="String">
+		delete from board where board_code=#board_code#
+	</delete>
+	<!-- 관련이미지 삭제 -->
+	<delete id="boardDAO.deleteBoardImg" parameterClass="String">
+		delete from board_img where board_code=#board_code#
+	</delete>
+	<!-- 글 수정 -->
+	<update id="boardDAO.updateBoard" parameterClass="boardVo">
+		update board set cate_code=#cate_code#,title=#title#,content=#content# where
+		board_code=#board_code#
+
+	</update>
+</sqlMap>

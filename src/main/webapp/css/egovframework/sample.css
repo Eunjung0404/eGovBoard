@@ -1,0 +1,72 @@
+/********************************************************************************/
+/*								                                                */
+/*  Design RIAN     			                                                */
+/*  Date : 2007-03-21		                                                  	*/
+/*      				         			                                    */
+/*									                                            */
+/********************************************************************************/
+* {
+	margin: 0;
+	padding: 0;
+}
+
+* html {
+	height: 1px;
+}
+
+#footer
+{
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	
+}
+
+#content
+{
+	margin-bottom:200px; 
+	padding: 50px;
+}
+body {
+	margin: 0;
+	padding: 0;
+	color: #666;
+	scroll: auto;
+}
+
+table {
+	width: 1000px;
+}
+
+
+
+.list tr:hover {
+	background-color: #EAEAEA;
+}
+
+.listtd {
+	padding: 10px 5px 8px 5px;
+	border-bottom: 1px solid #e5e5e5;
+}
+
+th {
+	background-color: black;
+	height: 26px;
+	text-align: center;
+	vertical-align: middle;
+	color: white;
+	height: 26px;
+}
+
+
+.pageDiv
+{
+    text-align: center;
+	padding: 50px;
+}
+
+.center {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}

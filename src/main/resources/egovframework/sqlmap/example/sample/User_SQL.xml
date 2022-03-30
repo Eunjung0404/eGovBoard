@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="User">
+
+	<typeAlias alias="egovMap"
+		type="egovframework.rte.psl.dataaccess.util.EgovMap" />
+
+	<resultMap id="userDetail"
+		class="egovframework.example.security.CustomUserDetail">
+		<result property="userid" column="user_id" />
+		<result property="userpwd" column="user_pwd" />
+		<result property="usernicname" column="user_nicname" />
+		<result property="userenabled" column="user_enabled" />
+		<result property="userauthority" column="authority"
+			select="userDAO.getAuth" />
+	</resultMap>
+
+	<insert id="userDAO.InsertUser"
+		parameterClass="egovframework.example.sample.service.UserVO">
+		insert into userinfo(user_id,
+		user_nicname,
+		user_name,
+		user_pwd,
+		user_phone,
+		user_enabled,
+		user_regdate ) values
+		(#user_id#,
+		#user_nicname#,
+		#user_name#,
+		#user_pwd#,
+		#user_phone#,
+		1,
+		sysdate)
+	</insert>
+	<insert id="userDAO.InsertAuth"
+		parameterClass="egovframework.example.sample.service.AuthorityVO">
+		insert into user_authority(user_id,
+		authority)values
+		(#user_id#,#authority#)
+	</insert>
+
+	<select id="userDAO.getAuth" remapResults="true"
+		parameterClass="String" resultMap="userDetail">
+		select * from userinfo
+		u,user_authority ua where
+		u.user_id=ua.user_id and
+		u.user_id=#user_id#
+	</select>
+	<!-- 유저닉네임가져오기 -->
+	<select id="userDAO.getuserNicname" parameterClass="String"
+		resultClass="egovframework.example.sample.service.UserVO">
+		select * from userinfo where user_id=#user_id#
+	</select>
+</sqlMap>
