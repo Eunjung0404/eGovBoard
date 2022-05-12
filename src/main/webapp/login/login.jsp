@@ -20,6 +20,7 @@
 			<tr>
 				<th colspan="2"><button type="submit">로그인</button></th>
 			</tr>
+			
 		</table>
 	</form:form>
 
