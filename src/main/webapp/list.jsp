@@ -1,12 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <div id="">
-	<span>전체게시글</span> <input type="hidden" value="${category }"
-		id="cate_code">
+	<h1>${category }게시판</h1>
+	<input type="hidden" value="${cate_code }" id="cate_code">
 
 	<table id="test" class="list">
 		<tr>
-			<td colspan="4" style="text-align: right;"><select id="listcount" onchange="chanegeslect()">
+			<td colspan="4" style="text-align: right;"><select
+				id="listcount" onchange="chanegeslect()">
 					<option value="5">5</option>
 					<option value="10">10</option>
 					<option value="15">15</option>
@@ -14,21 +15,27 @@
 			</select></td>
 		</tr>
 		<tr>
-			<th>글번호</th>
-			<th style="width: 75%;">제목</th>
+			<th>번호</th>
+			<th style="width: 70%;">제목</th>
 			<th style="text-align: center;">작성자</th>
 			<th>작성일</th>
+			<th>조회수</th>
 		</tr>
 		<tbody id="tbody">
 
 		</tbody>
 		<tr>
-		<td colspan="4" style="text-align: right; "><select id=""><option value="title">제목</option>
-		<option value="content">내용</option>
-		<option value="all">내용+제목</option>
-		<option value="user_nicname">작성자</option>
-		</select><input type="text" name=""></td>
-		
+			<td colspan="5" style="text-align: right;"><select name="field"
+				id="field">
+					<option value="" disabled selected>검색조건</option>
+					<option value="title">제목</option>
+					<option value="content">내용</option>
+					<option value="all">내용+제목</option>
+					<option value="user_nicname">작성자</option>
+			</select><input type="text" name="keyword" id="keyword">
+				<button type="button" onclick="getBoardAll(1)">검색</button> <a
+				href="/myproject/user/boardInsert.do">글작성</a></td>
+
 		</tr>
 	</table>
 	<div id="pagecount" class="pageDiv"
@@ -52,7 +59,9 @@
 	}
 	function getBoardAll(pageNum) {
 		let cate_code = document.getElementById("cate_code").value;
-		let listcount=document.getElementById("listcount").value;
+		let listcount = document.getElementById("listcount").value;
+		let field = document.getElementById("field").value;
+		let keyword = document.getElementById("keyword").value;
 		let xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function() {
 			if (xhr.readyState == 4 && xhr.status == 200) {
@@ -65,12 +74,13 @@
 					let tr = document.createElement('tr');
 					tr.id = json.list[i].board_code;
 
-					tr.innerHTML = "<td>" + (listcount * (pageNum - 1) + (i + 1))
+					tr.innerHTML = "<td>"
+							+ (listcount * (pageNum - 1) + (i + 1))
 							+ "</td><td onclick='detailurl(event)'>"
 							+ json.list[i].title
 							+ "</td><td style='text-align: center;' >"
 							+ json.list[i].user_nicname + "</td><td>"
-							+ json.list[i].regdate + "</td>"
+							+ json.list[i].regdate + "</td><td style='text-align: center;'>"+json.list[i].board_count+"</td>"
 					tbody.appendChild(tr);
 				}
 
@@ -103,8 +113,9 @@
 
 			}
 		}
-		xhr.open('get', 'testjson.json?pageNum=' + pageNum +'&listcount='+listcount +'&cate_code='
-				+ cate_code, true);
+		xhr.open('get', 'testjson.json?pageNum=' + pageNum + '&listcount='
+				+ listcount + '&cate_code=' + cate_code + '&field=' + field
+				+ '&keyword=' + keyword, true);
 		xhr.send();
 
 	}

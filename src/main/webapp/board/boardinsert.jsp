@@ -32,7 +32,8 @@ div#editor {
 </style>
 <h1>글작성</h1>
 <form:form name="frm" method="post" action="boardSave.do"
-	acceptCharset="UTF-8" enctype="multipart/form-data">
+	acceptCharset="UTF-8" enctype="multipart/form-data"
+	onsubmit="return checkSubmit()">
 	<sec:csrfInput />
 	<table class="insertTable">
 		<tr>
@@ -43,14 +44,14 @@ div#editor {
 		</tr>
 
 		<tr>
-			<td style="width:10%;"><select name="cate_code">
+			<td style="width: 10%;"><select name="cate_code" id="cateCode">
 					<option value="" disabled selected>카테고리</option>
 					<c:forEach var="i" items="${list}">
 						<option value="${i.cate_code} ">${i.category}</option>
 					</c:forEach>
 			</select></td>
 			<td><input type="text" name="title" style="width: 100%"
-				placeholder="제목을 입력해 주세요"></td>
+				placeholder="제목을 입력해 주세요" id="title"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -81,8 +82,19 @@ div#editor {
 						<option value="insertOrderedList">OL</option>
 						<option value="insertUnorderedList">UL</option>
 					</select>
+					<button type="button" id="btn-justifyCenter">
+						<img src="${cp }/images/icon/center.png">
+					</button>
+					<button type="button" id="btn-justifyLeft">
+						<img src="${cp }/images/icon/left.png">
+					</button>
 
-					<button type="button" id="btn-image" onclick="imgupload()">사진</button>
+					<button type="button" id="btn-justifyRight">
+						<img src="${cp }/images/icon/right.png">
+					</button>
+					<button type="button" id="btn-image" onclick="imgupload()">
+						<img src="${cp }/images/icon/image.png">
+					</button>
 
 				</div>
 			</td>
@@ -156,6 +168,9 @@ div#editor {
 	const btnStrike = document.getElementById('btn-strike');
 	const btnList = document.getElementById('btn-list');
 	const btnHTML = document.getElementById('btn-HTML');
+	const btnjustifyCenter = document.getElementById('btn-justifyCenter');
+	const btnjustifyLeft = document.getElementById('btn-justifyLeft');
+	const btnjustifyRight = document.getElementById('btn-justifyRight');
 	btnBold.addEventListener('click', function() {
 		setStyle('bold', '');
 	});
@@ -174,13 +189,44 @@ div#editor {
 	btnHTML.addEventListener('change', function(e) {
 		setStyle("formatBlock", e.target.value);
 	});
+	btnjustifyCenter.addEventListener('click', function(e) {
+		setStyle("justifyCenter", '');
+	});
+	btnjustifyLeft.addEventListener('click', function(e) {
+		setStyle("justifyLeft", '');
+	});
+	btnjustifyRight.addEventListener('click', function(e) {
+		setStyle("justifyRight", '');
+	});
 	function setStyle(style, option) {
 		document.execCommand(style, false, option);
 		focusEditor();
+		parameterSet();
 	} // 버튼 클릭 시 에디터가 포커스를 잃기 때문에 다시 에디터에 포커스를 해줌 
 	function focusEditor() {
 		editor.focus({
 			preventScroll : true
 		});
+	}
+
+	//데이터 공백 검사
+	function nullDataCheck(id, name) {
+		let data = document.getElementById(id).value;
+		if (data.length == 0) {
+			alert(name)
+			return false;
+		}
+		return true;
+	}
+	//유효성 검사 
+	function checkSubmit() {
+		if (!nullDataCheck('cateCode', '카테고리를 선택해주세요')) {
+			return false;
+		}
+		if (!nullDataCheck('title', '제목을 입력해주세요')) {
+			return false;
+		}
+
+		return true;
 	}
 </script>

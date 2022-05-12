@@ -9,7 +9,7 @@
 			<tr>
 				<th>ID</th>
 				<td><input type="text" name="username"
-					placeholder="아이디를 입력해주세요"></td>
+					placeholder="아이디를 입력해주세요"><span id="errormsg" style="color:red;font-size: 10px;">${requestScope.msg }</span></td>
 			</tr>
 			<tr>
 				<th>비밀번호</th>

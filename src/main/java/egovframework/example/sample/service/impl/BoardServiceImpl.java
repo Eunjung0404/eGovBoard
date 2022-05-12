@@ -12,6 +12,7 @@ import egovframework.example.sample.service.BoardService;
 import egovframework.example.sample.service.BoardVO;
 import egovframework.example.sample.vo.BoardImgVo;
 import egovframework.example.sample.vo.CategoryVo;
+import egovframework.example.sample.vo.CommentVo;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("boardService")
@@ -89,5 +90,25 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 		// TODO Auto-generated method stub
 		return boardDAO.UpdateBoard(vo);
 	}
+
+	@Override
+	public int ADDCount(String board_code) throws Exception {
+		// TODO Auto-generated method stub
+		return boardDAO.ADDCount(board_code);
+	}
+
+	@Override
+	public List<?> GetMyBoard(HashMap<String, Object> map) throws Exception {
+		// TODO Auto-generated method stub
+		return boardDAO.GetMyBoard(map);
+	}
+
+	@Override
+	public int GetMyBoardCount(String user_id) throws Exception {
+		// TODO Auto-generated method stub
+		return boardDAO.GetMyBoardCount(user_id);
+	}
+
+
 
 }

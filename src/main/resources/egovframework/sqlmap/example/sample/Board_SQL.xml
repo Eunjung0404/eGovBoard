@@ -20,9 +20,10 @@
 		,user_nicname
 		,title
 		,content
-		,
-		regdate ) values
-		(seq_board.nextval,#cate_code#,#user_id#,#user_nicname#,#title#,CHAR_TO_CLOB(#content#),sysdate)
+		,regdate
+		,state
+		,board_count ) values
+		(seq_board.nextval,#cate_code#,#user_id#,#user_nicname#,#title#,CHAR_TO_CLOB(#content#),sysdate,'1','0')
 	</insert>
 	<!-- 카테고리 정보 불러오기 -->
 	<select id="boardDAO.SelectCategory"
@@ -30,21 +31,50 @@
 		SELECT * FROM board_category
 	</select>
 	<!-- 게시글 리스트 가져오기 -->
-	<select id="boardDAO.SelectAllBoard" parameterClass="map"
+	<select id="boardDAO.SelectBoardlist" parameterClass="map"
 		resultClass="boardVo">
 		SELECT * from(SELECT board.*,ROWNUM rown from(SELECT * FROM board
-		<isNotEmpty property="cate_code">
-			where cate_code=#cate_code#
+		where state='1'
+		<isNotEmpty prepend="AND" property="cate_code">
+			cate_code=#cate_code#
 		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="field">
+			<isEqual property="field" compareValue="all">
+				content like
+				'%'||#keyword#||'%' or title like
+				'%'||#keyword#||'%'
+			</isEqual>
+			<isNotEqual property="field" compareValue="all">
+				$field$ like
+				'%'||#keyword#||'%'
+			</isNotEqual>
+
+		</isNotEmpty>
+
 		ORDER BY TO_NUMBER(board_code) DESC)board)<![CDATA[where rown>=#startRow# and rown<=#endRow#]]>
 	</select>
 	<!-- 게시글 총 리스트 가져오기 -->
-	<select id="boardDAO.GetAllBoardCount" resultClass="int" parameterClass="map">
+	<select id="boardDAO.GetAllBoardCount" resultClass="int"
+		parameterClass="map">
 		select
 		NVL(count(*),0) FROM board
-		<isNotEmpty property="cate_code">
-			where cate_code=#cate_code#
+		where state='1'
+		<isNotEmpty prepend="AND" property="cate_code">
+			cate_code=#cate_code#
 		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="field">
+			<isEqual property="field" compareValue="all">
+				content like
+				'%'||#keyword#||'%' or title like
+				'%'||#keyword#||'%'
+			</isEqual>
+			<isNotEqual property="field" compareValue="all">
+				$field$ like
+				'%'||#keyword#||'%'
+			</isNotEqual>
+
+		</isNotEmpty>
+
 	</select>
 	<!-- 게시글 상세 가져오기 -->
 
@@ -69,25 +99,62 @@
 	<!-- 카테고리 가져오기 -->
 	<select id="boardDAO.getCategory" parameterClass="String"
 		resultClass="String">
-		select category from board_category where cate_code = #cate_code#
+		select category from board_category where cate_code =
+		#cate_code#
 	</select>
 	<!-- 이미지 정보 가져오기 -->
 	<select id="boardDAO.getImgNames" parameterClass="String"
 		resultClass="String">
-		select imgname from board_img where board_code=#board_code#
+		select imgname from board_img where
+		board_code=#board_code#
 	</select>
 	<!-- 글 삭제 -->
-	<delete id="boardDAO.deleteBoard" parameterClass="String">
-		delete from board where board_code=#board_code#
-	</delete>
+	<update id="boardDAO.deleteBoard" parameterClass="String">
+		update board
+		set state='0' where board_code=#board_code#
+	</update>
 	<!-- 관련이미지 삭제 -->
 	<delete id="boardDAO.deleteBoardImg" parameterClass="String">
-		delete from board_img where board_code=#board_code#
+		delete from
+		board_img where board_code=#board_code#
 	</delete>
 	<!-- 글 수정 -->
 	<update id="boardDAO.updateBoard" parameterClass="boardVo">
-		update board set cate_code=#cate_code#,title=#title#,content=#content# where
+		update board
+		set cate_code=#cate_code#,title=#title#,content=#content# where
 		board_code=#board_code#
-
 	</update>
+
+
+	<!-- 카운트 + -->
+	<update id="boardDAO.ADDCount" parameterClass="String">
+		update board set
+		board_count=TO_NUMBER(board_count)+1 where
+		board_code=#board_code#
+	</update>
+
+	<!-- 내가 작성한 글 가져오기 -->
+
+	<select id="boardDAO.getMyboard" resultClass="boardVo"
+		parameterClass="map">
+
+		SELECT * from(SELECT board.*,ROWNUM rown from(SELECT * FROM board
+		where
+		state='1' AND user_id=#user_id# ORDER BY TO_NUMBER(board_code)
+		DESC)board)<![CDATA[where rown>=#startRow# and rown<=#endRow#]]>
+	</select>
+
+	<!-- 내가 작성한 글 갯수 가져오기 -->
+
+	<select id="boardDAO.getMyboardCount" resultClass="int"
+		parameterClass="String">
+
+		SELECT NVL(count(*),0)
+		FROM board
+		where
+		state='1' AND
+		user_id=#user_id# ORDER BY
+		TO_NUMBER(board_code)
+		DESC
+	</select>
 </sqlMap>

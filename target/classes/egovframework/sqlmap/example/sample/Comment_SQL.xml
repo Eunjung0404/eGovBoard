@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="Comment">
+
+	<!-- 댓글 작성 -->
+	<insert id="commentDAO.insertComment"
+		parameterClass="egovframework.example.sample.vo.CommentVo">
+		insert into
+		board_comment( comm_code
+		,board_code
+		,user_id
+		,user_nicname
+		,comment
+		,commdepth
+		,commgroup
+		,state
+		,regdate
+		) values
+		(seq_boardcomment.nextval,#board_code#,#user_id#,#user_nicname#,#comment#,#commdepth#,#commgroup#,'1',sysdate)
+	</insert>
+
+	<!-- 댓글 리스트 뽑아오기 -->
+	<select id="commentDAO.selectCommentList" parameterClass="String"
+		resultClass="egovframework.example.sample.vo.CommentVo">
+		select * from board_comment where board_code=#board_code#
+	</select>
+</sqlMap>

@@ -4,6 +4,12 @@ import java.sql.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class BoardVO {
 
 	private String board_code;
@@ -12,56 +18,10 @@ public class BoardVO {
 	private String user_nicname;
 	private String title;
 	private String content;
-	@JsonFormat(pattern="yyyy-MM-dd")
+	@JsonFormat(pattern="yyyy-MM-dd" ,timezone = "Asia/Seoul")
 	private Date regdate;
-	public String getBoard_code() {
-		return board_code;
-	}
-	public void setBoard_code(String board_code) {
-		this.board_code = board_code;
-	}
-	public String getCate_code() {
-		return cate_code;
-	}
-	public void setCate_code(String cate_code) {
-		this.cate_code = cate_code;
-	}
-	public String getUser_id() {
-		return user_id;
-	}
-	public void setUser_id(String user_id) {
-		this.user_id = user_id;
-	}
-	public String getUser_nicname() {
-		return user_nicname;
-	}
-	public void setUser_nicname(String user_nicname) {
-		this.user_nicname = user_nicname;
-	}
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	@Override
-	public String toString() {
-		return "BoardVO [board_code=" + board_code + ", cate_code=" + cate_code + ", user_id=" + user_id
-				+ ", user_nicname=" + user_nicname + ", title=" + title + ", content=" + content + ", regdate="
-				+ regdate + "]";
-	}
-	public String getContent() {
-		return content;
-	}
-	public void setContent(String content) {
-		this.content = content;
-	}
-	public Date getRegdate() {
-		return regdate;
-	}
-	public void setRegdate(Date regdate) {
-		this.regdate = regdate;
-	}
-
+	private String state;
+	private String board_count;
+	
 
 }

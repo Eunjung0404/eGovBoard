@@ -24,14 +24,19 @@
 		user_pwd,
 		user_phone,
 		user_enabled,
-		user_regdate ) values
+		user_regdate,
+		userprofile_img,
+		state )
+		values
 		(#user_id#,
 		#user_nicname#,
 		#user_name#,
 		#user_pwd#,
 		#user_phone#,
 		1,
-		sysdate)
+		sysdate,
+		#userprofile_img#,
+		'1')
 	</insert>
 	<insert id="userDAO.InsertAuth"
 		parameterClass="egovframework.example.sample.service.AuthorityVO">
@@ -52,4 +57,21 @@
 		resultClass="egovframework.example.sample.service.UserVO">
 		select * from userinfo where user_id=#user_id#
 	</select>
+
+	<!-- 유저 정보 수정 -->
+	<update id="userDAO.userUpdate"
+		parameterClass="egovframework.example.sample.service.UserVO">
+		update userinfo
+		set
+		user_name=#user_name#,user_nicname=#user_nicname#,user_phone=#user_phone#
+		,userprofile_img=#userprofile_img# where user_id=#user_id#
+
+	</update>
+
+	<!-- 비밀번호 변경 -->
+	<update id="userDAO.userPwdUpdate"
+		parameterClass="egovframework.example.sample.service.UserVO">
+		update userinfo set user_pwd=#user_pwd# where
+		user_id=#user_id#
+	</update>
 </sqlMap>

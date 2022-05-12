@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -66,7 +67,7 @@ public class BoardController {
 		System.out.println(filelist.size());
 		String path = sc.getRealPath("/images/boardimg");
 		System.out.println(path);
-		//filelist가 들어오면 파일 저장...
+		// filelist가 들어오면 파일 저장...
 		if (filelist.size() > 0) {
 			for (MultipartFile mf : filelist) {
 
@@ -87,16 +88,18 @@ public class BoardController {
 			}
 		}
 
-		return "main.tiles";
+		return "redirect:boardlist.do";
 	}
 
 	@RequestMapping(value = "/user/boardDetail.do")
 	public String boardDetail(String board_code, Model model, Principal principal) throws Exception {
+		
+		boardService.ADDCount(board_code);
 		BoardVO vo = boardService.SelectBoardDetail(board_code);
 		List<?> imgname = boardService.GetImgName(board_code);
 		String category = boardService.GetCategory(vo.getCate_code());
 
-		String content=StringEscapeUtils.unescapeHtml(vo.getContent());
+		String content = StringEscapeUtils.unescapeHtml(vo.getContent());
 		vo.setContent(content);
 		System.out.println(imgname);
 		model.addAttribute("vo", vo);
@@ -151,7 +154,7 @@ public class BoardController {
 				}
 			}
 		}
-		return "main.tiles";
+		return "redirect:/user/boardDetail.do?board_code=" + vo.getBoard_code();
 	}
 
 	@GetMapping(value = "/user/boardDelete.do")
@@ -169,20 +172,19 @@ public class BoardController {
 			}
 		}
 
-		
 		boardService.DeleteBoardImg(board_code);
 		boardService.DeleteBoard(board_code);
 
-		return "redirect:main.do";
+		return "redirect:boardlist.do";
 
 	}
 
-	@GetMapping(value="boardlist.do")
-	public String boardlist(String cate_code,Model model) throws Exception
-	{
-		model.addAttribute("category",cate_code);
+	@GetMapping(value = { "boardlist.do", "user/boardlist.do" })
+	public String boardlist(String cate_code, Model model) throws Exception {
+		String category = boardService.GetCategory(cate_code);
+		model.addAttribute("category", category);
+		model.addAttribute("cate_code", cate_code);
 		return "list.tiles";
 	}
-	
-	
+
 }

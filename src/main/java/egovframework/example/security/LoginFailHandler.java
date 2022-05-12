@@ -31,10 +31,10 @@ public class LoginFailHandler implements AuthenticationFailureHandler {
 		} else {
 			errorMessage = "알 수 없는 이유로 로그인에 실패하였습니다 관리자에게 문의하세요.";
 		}
-		System.out.println(errorMessage);
-
-		response.sendRedirect(request.getContextPath() + "/login.do");
-
+		//System.out.println(errorMessage);
+        request.setAttribute("msg", errorMessage);
+		//response.sendRedirect(request.getContextPath() + "/loginpage.do");
+		request.getRequestDispatcher("/loginpage.do").forward(request, response);
 	}
 
 }
