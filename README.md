@@ -1,3 +1,5 @@
+<h1>프로젝트 개요</h1>
+전자정부프레임워크를 사용하여 CRUD가 가능한 게시판 구현
 # Skill
 
 전자정부프레임워크(eGov),spring,Json,RestAPI,ajax,js,java,html,css,ibatis
@@ -5,8 +7,6 @@
 
 <h5>DB-cubrid</h5>
 
-<h1>프로젝트 개요</h1>
-전자정부프레임워크를 사용하여 CRUD가 가능한 게시판 구현
 <h1>구현 기능</h1>
 게시판 작성
 <li>글 작성</li>
